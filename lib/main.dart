@@ -27,15 +27,68 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   String output = '0';
-  Widget buildButton(buttontext) {
+  String _output = '0';
+  double num1 = 0.0;
+  double num2 = 0.0;
+  String opprand = '';
+
+  buttonPressed(String buttonText){
+    if(buttonText == 'Clear'){
+      output = '0';
+      _output = '';
+      num1 = 0.0;
+      num2 = 0.0;
+      opprand = '';
+    } else if(buttonText == '+' || buttonText == '-' || buttonText == '*' || buttonText == '/'){
+      num1 = double.parse(_output);
+      // num2 = double.parse(output);
+      opprand = buttonText;
+      _output = '';
+
+    }else if(buttonText == '.'){
+      if(_output.contains('.')){
+        print('Error adding another decimal point');
+        return;
+      }else{
+        _output = _output + buttonText;
+      }
+    }else if(buttonText == '='){
+      num2 = double.parse(_output);
+
+      if(opprand == '+'){
+        _output = (num1 + num2).toString();
+      }else if(opprand == '-'){
+        _output = (num1 - num2).toString();
+      }else if(opprand == '*'){
+        _output = (num1 * num2).toString();
+      }else if(opprand == '/'){
+        _output = (num1 / num2).toString();
+      }
+
+      num1 = 0.0;
+      num2 = 0.0;
+      _output = '0';
+      opprand = '';
+    }else{
+      _output = _output + buttonText;
+    }
+    print(_output);
+
+    setState(() {
+      output = double.parse(_output).toStringAsFixed(2);
+    });
+    print(buttonText);
+  }
+
+  Widget buildButton(buttonText) {
     return new Expanded(
       child: new OutlineButton(
         child: new Text(
-          buttontext,
+          buttonText,
           style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
         padding: EdgeInsets.all(24),
-        onPressed: () => {},
+        onPressed: () => buttonPressed(buttonText),
       ),
     );
   }
@@ -56,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 horizontal: 12.0
               ),
                 child: new Text(
-              '8',
+              output,
               style: TextStyle(fontSize: 48.0),
             )),
             new Expanded(
